@@ -1,5 +1,8 @@
 {
   "name": "Goguma",
+  "scripts": {
+    "build": "react-scripts build"  // Adjust this depending on your framework or build tool
+  },
   "dependencies": {
     "wasp": "file:.wasp/out/sdk/wasp",
     "react": "^18.2.0"
