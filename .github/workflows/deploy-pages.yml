@@ -9,6 +9,21 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_DB: goguma_db
+          POSTGRES_USER: goguma_user
+          POSTGRES_PASSWORD: goguma_password
+        options: >-
+          --health-cmd="pg_isready -U ${{ secrets.POSTGRES_USER }}" 
+          --health-interval=10s 
+          --health-timeout=5s 
+          --health-retries=5
+        ports:
+          - 5432:5432
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
@@ -21,11 +36,15 @@ jobs:
         curl -sSL https://get.wasp-lang.dev/installer.sh | sh
         echo 'export PATH="$HOME/.wasp/bin:$PATH"' >> $GITHUB_ENV
 
-    - name: Set up SQLite In-Memory Database URL
-      run: echo "DATABASE_URL=file:memory?mode=memory&cache=shared" >> $GITHUB_ENV
+    - name: Set up PostgreSQL Environment Variables
+      run: |
+        echo "DATABASE_URL=postgresql://goguma_user:goguma_password@localhost:5432/goguma_db" >> $GITHUB_ENV
 
     - name: Install dependencies
       run: npm install
+
+    - name: Run Prisma Migrate
+      run: npx prisma migrate deploy
 
     - name: Build the project
       run: wasp build
