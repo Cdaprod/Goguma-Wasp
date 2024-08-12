@@ -21,6 +21,9 @@ jobs:
         curl -sSL https://get.wasp-lang.dev/installer.sh | sh
         echo 'export PATH="$HOME/.wasp/bin:$PATH"' >> $GITHUB_ENV
 
+    - name: Set up SQLite In-Memory Database URL
+      run: echo "DATABASE_URL=file:memory?mode=memory&cache=shared" >> $GITHUB_ENV
+
     - name: Install dependencies
       run: npm install
 
