@@ -27,6 +27,8 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
+      with:
+        fetch-depth: 0  # Ensure full history for committing back
 
     - name: Install system dependencies
       run: sudo apt-get install -y curl git
@@ -48,19 +50,24 @@ jobs:
     - name: Build the project
       run: wasp build
 
-    - name: Move build output to /docs
-      run: mv .wasp/build ./docs
+    - name: Switch to gh-pages branch
+      run: |
+        git checkout gh-pages || git checkout --orphan gh-pages
+        git rm -rf .
 
-    - name: Commit and push changes
+    - name: Move build output to webapp/
+      run: mv .wasp/build ./webapp
+
+    - name: Commit and push changes to gh-pages
       run: |
         git config --local user.email "actions@github.com"
         git config --local user.name "GitHub Actions"
-        git add docs
+        git add webapp
         git commit -m "Deploy build to GitHub Pages"
-        git push origin main
+        git push origin gh-pages --force
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./docs
+        publish_dir: ./webapp
