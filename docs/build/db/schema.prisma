@@ -1,0 +1,62 @@
+
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  alias Alias[]
+  report Report[]
+  auth Auth?
+}
+
+model Alias {
+  id Int @id @default(autoincrement())
+  name String
+  user User @relation(fields: [userId], references: [id])
+  userId Int
+  Report Report[]
+}
+
+model Report {
+  id Int @id @default(autoincrement())
+  title String
+  content String
+  alias Alias @relation(fields: [aliasId], references: [id])
+  aliasId Int
+  user User @relation(fields: [userId], references: [id])
+  userId Int
+  image String
+  pdf String
+}
+
+model Auth {
+  id String @id @default(uuid())
+  userId Int? @unique
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  identities AuthIdentity[]
+  sessions Session[]
+}
+
+model AuthIdentity {
+  providerName String
+  providerUserId String
+  providerData String @default("{}")
+  authId String
+  auth Auth @relation(fields: [authId], references: [id], onDelete: Cascade)
+  @@id([providerName, providerUserId])
+}
+
+model Session {
+  id String @id @unique
+  expiresAt DateTime
+  userId String
+  auth Auth @relation(references: [id], fields: [userId], onDelete: Cascade)
+  @@index([userId])
+}
+

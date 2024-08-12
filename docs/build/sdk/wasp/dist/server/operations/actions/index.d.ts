@@ -1,0 +1,13 @@
+import { type AuthenticatedOperationFor } from '../wrappers.js';
+import { createAlias as createAlias_ext } from 'wasp/ext-src/actions';
+import { createReport as createReport_ext } from 'wasp/ext-src/actions';
+import { deleteAlias as deleteAlias_ext } from 'wasp/ext-src/actions';
+import { updateReport as updateReport_ext } from 'wasp/ext-src/actions';
+export type CreateAlias_ext = typeof createAlias_ext;
+export declare const createAlias: AuthenticatedOperationFor<CreateAlias_ext>;
+export type CreateReport_ext = typeof createReport_ext;
+export declare const createReport: AuthenticatedOperationFor<CreateReport_ext>;
+export type DeleteAlias_ext = typeof deleteAlias_ext;
+export declare const deleteAlias: AuthenticatedOperationFor<DeleteAlias_ext>;
+export type UpdateReport_ext = typeof updateReport_ext;
+export declare const updateReport: AuthenticatedOperationFor<UpdateReport_ext>;
