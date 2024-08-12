@@ -17,7 +17,7 @@ jobs:
           POSTGRES_USER: goguma_user
           POSTGRES_PASSWORD: goguma_password
         options: >-
-          --health-cmd="pg_isready -U ${{ secrets.POSTGRES_USER }}" 
+          --health-cmd="pg_isready -U goguma_user" 
           --health-interval=10s 
           --health-timeout=5s 
           --health-retries=5
@@ -36,9 +36,8 @@ jobs:
         curl -sSL https://get.wasp-lang.dev/installer.sh | sh
         echo 'export PATH="$HOME/.wasp/bin:$PATH"' >> $GITHUB_ENV
 
-    - name: Set up PostgreSQL Environment Variables
-      run: |
-        echo "DATABASE_URL=postgresql://goguma_user:goguma_password@localhost:5432/goguma_db" >> $GITHUB_ENV
+    - name: Set up PostgreSQL Environment Variable
+      run: echo "DATABASE_URL=postgresql://goguma_user:goguma_password@localhost:5432/goguma_db" >> $GITHUB_ENV
 
     - name: Install dependencies
       run: npm install
