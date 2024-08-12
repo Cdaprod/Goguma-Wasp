@@ -3,8 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main  # This workflow will run on push to the main branch
-  pull_request:
+      - main  # Trigger on push to the main branch
 
 jobs:
   build-and-deploy:
@@ -19,14 +18,17 @@ jobs:
       with:
         node-version: 18
 
+    - name: Install Wasp CLI
+      run: npm install -g wasp
+
     - name: Install dependencies
       run: npm install
 
     - name: Build the project
-      run: npm run build
+      run: wasp build
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./build  # Specify the correct build directory
+        publish_dir: ./build/web-app  # Update this based on where Wasp outputs the built app
